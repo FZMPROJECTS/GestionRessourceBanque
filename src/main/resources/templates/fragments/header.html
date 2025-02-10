@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en"
+
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!--HEADER-->
+    <nav class="navbar navbar-header navbar-expand navbar-light" th:fragment="header">
+        <a class="sidebar-toggler" href="#"><span class="navbar-toggler-icon"></span></a>
+        <button class="btn navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent" style="margin-left: 75%;">
+            <ul class="navbar-nav d-flex align-items-center navbar-light ms-auto">
+                <li class="dropdown nav-icon">
+                    <a href="#" data-bs-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
+                        <div class="d-lg-inline-block">
+                            <i data-feather="bell"></i>
+                            <span class="badge bg-danger" th:if="${@globalControllerAdvice.userNotifications != null and not #lists.isEmpty(@globalControllerAdvice.userNotifications)}" th:text="${#lists.size(@globalControllerAdvice.userNotifications)}"></span>
+                        </div>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end dropdown-menu-large">
+                        <h6 class='py-2 px-4'>Notifications</h6>
+                        <ul class="list-group rounded-none">
+                            <li class="list-group-item border-0 align-items-start"
+                                th:each="notification, iterStat : ${@globalControllerAdvice.userNotifications}"
+                                th:if="${iterStat.index < 2}">
+                                <div class="avatar bg-success me-3">
+                                    <span class="avatar-content"><i data-feather="bell"></i></span>
+                                </div>
+                                <div>
+                                    <h6 class='text-bold'>Notification</h6>
+                                    <p class='text-xs' th:text="${notification.message}"></p>
+                                    <small class="text-muted" th:text="${#temporals.format(notification.date, 'dd-MM-yyyy HH:mm')}"></small>
+                                </div>
+                            </li>
+                            <li class="list-group-item border-0 align-items-center text-center" th:if="${@globalControllerAdvice.userNotifications == null or #lists.isEmpty(@globalControllerAdvice.userNotifications)}">
+                                <p class='text-xs'>Aucune notification</p>
+                            </li>
+                        </ul>
+                        <div class="dropdown-menu-footer text-center" th:if="${@globalControllerAdvice.userNotifications != null and not #lists.isEmpty(@globalControllerAdvice.userNotifications)}">
+                            <a href="#" class="dropdown-item" th:href="@{/notifications}">Voir toutes les notifications</a>
+                        </div>
+                    </div>
+                </li>
+                <li class="dropdown nav-icon me-2">
+                    <a href="#" data-bs-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
+                        <div class="d-lg-inline-block">
+                            <i data-feather="mail"></i>
+                        </div>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end" >
+
+                        <a class="dropdown-item active" th:href="@{/chatbot}"><i data-feather="mail"></i> Chatbot</a>
+
+                    </div>
+                </li>
+                <li class="dropdown">
+                    <a href="#" data-bs-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
+                        <div class="avatar me-1">
+                            <img th:src="@{/images/avatar.png}" alt="" srcset="">
+                        </div>
+                        <div class="d-none d-md-block d-lg-inline-block" style="padding-left: 20px">
+                            Hi, <span th:text="${#authentication.name}"></span></div>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end">
+                        <a class="dropdown-item" th:href="@{/MonProfil}"><i data-feather="user"></i> Account</a>
+
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            <i data-feather="log-out"></i> Logout
+                        </a>
+
+                        <form id="logout-form" method="post" th:action="@{/logout}" style="display: none;">
+                            <button sec:authorize="isAuthenticated()" type="submit">Logout</button>
+                        </form>
+
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    feather.replace();
+</script>
+
+</body>
+</html>

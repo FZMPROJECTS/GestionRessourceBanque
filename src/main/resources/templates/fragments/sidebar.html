@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Sidebar Navigation</title>
+    <!-- Ajoutez vos fichiers CSS ici -->
+</head>
+<body>
+
+<div id="sidebar" class="active" th:fragment="sidebar">
+    <div class="sidebar-wrapper active">
+        <div class="sidebar-header">
+            <a  class="sidebar-link">
+                <img th:src="@{/images/logo2.png}" alt="Logo" style="padding-left: 65px">
+            </a>
+        </div>
+        <div class="sidebar-menu">
+            <ul class="menu">
+
+                <li class="sidebar-title">Main Menu</li>
+
+                <!-- Condition pour afficher Dashboard ou Home -->
+                <li class="sidebar-item active">
+                    <a th:href="${#authorization.expression('hasAnyRole(''ADMIN'',''ADMINISTRATEUR'')') ? '/' : '/home'}" class="sidebar-link">
+                        <i data-feather="home" width="20"></i>
+                        <span th:text="${#authorization.expression('hasAnyRole(''ADMIN'',''ADMINISTRATEUR'')') ? 'Dashboard' : 'Home'}"></span>
+                    </a>
+                </li>
+
+
+                <li class="sidebar-item">
+                    <a th:href="@{/MaterielsList}" class="sidebar-link">
+                        <i data-feather="triangle" width="20"></i>
+                        <span>Materiel</span>
+                    </a>
+                </li>
+
+                <li class="sidebar-title">Interaction</li>
+
+                <li class="sidebar-item has-sub" th:if="${#authorization.expression('hasAnyRole(''ADMIN'',''ADMINISTRATEUR'')')}">
+                    <a href="#" class="sidebar-link">
+                        <i data-feather="file-text" width="20"></i>
+                        <span>Mouvement</span>
+                    </a>
+                    <ul class="submenu">
+                        <li><a th:href="@{/CreateMouvement}">Affecter un Matériel</a></li>
+                        <li><a th:href="@{/MouvementsList}">Liste des Mouvements</a></li>
+                    </ul>
+                </li>
+
+                <li class="sidebar-item">
+                    <a th:href="@{/EntitesList}" class="sidebar-link">
+                        <i data-feather="layout" width="20"></i>
+                        <span>Entite</span>
+                    </a>
+                </li>
+
+                <li class="sidebar-item">
+                    <a th:href="@{/DemandesList}" class="sidebar-link">
+                        <i data-feather="layers" width="20"></i>
+                        <span>Demande</span>
+                    </a>
+                </li>
+
+                <li class="sidebar-item" th:if="${#authorization.expression('hasAnyRole(''ADMIN'',''ADMINISTRATEUR'')')}">
+                    <a th:href="@{/CreateUtilisateur}" class="sidebar-link">
+                        <i data-feather="grid" width="20"></i>
+                        <span>Utilisateur</span>
+                    </a>
+                </li>
+
+                <li class="sidebar-item" th:if="${#authorization.expression('hasAnyRole(''ADMIN'',''ADMINISTRATEUR'')')}">
+                    <a th:href="@{/CreateRole}" class="sidebar-link">
+                        <i data-feather="file-plus" width="20"></i>
+                        <span>Role</span>
+                    </a>
+                </li>
+
+                <li class="sidebar-title">Extra</li>
+
+                <li class="sidebar-item has-sub">
+                    <a href="#" class="sidebar-link">
+                        <i data-feather="user" width="20"></i>
+                        <span>Information</span>
+                    </a>
+                    <ul class="submenu">
+                        <li><a th:href="@{/chatbot}">Chatbox</a></li>
+                        <li><a th:href="@{/MonProfil}">Profile</a></li>
+                    </ul>
+                </li>
+
+                <li class="sidebar-item">
+                    <a th:href="@{/logout}" class="sidebar-link">
+                        <i data-feather="user" width="20"></i>
+                        <span>Logout</span>
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+        <button class="sidebar-toggler btn x"><i data-feather="x"></i></button>
+    </div>
+</div>
+
+<!-- Ajoutez vos fichiers JavaScript ici -->
+
+</body>
+</html>

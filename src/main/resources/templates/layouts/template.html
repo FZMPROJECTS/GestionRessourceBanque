@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{/css/Chart.min.css}">
+    <link rel="stylesheet" th:href="@{/css/perfect-scrollbar.css}">
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+    <link rel="shortcut icon" th:href="@{/images/logo_CDM.png}" type="image/x-icon">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- Import Barcode Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Barcode+39&display=swap" rel="stylesheet">
+
+    <style>
+        html, body {
+            height: 100%;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+        #app {
+            flex: 1 0 auto;
+            display: flex;
+            flex-direction: column;
+        }
+        #main {
+            flex: 1 0 auto;
+            overflow-y: auto;
+        }
+        .main-content {
+            min-height: 80vh;
+        }
+        #footer {
+            flex-shrink: 0;
+            background-color: #f0f0f0;
+            padding: 10px;
+            text-align: center;
+        }
+        .table-responsive {
+            overflow-x: auto;
+            max-height: 70vh;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <span th:replace="fragments/sidebar :: sidebar"></span>
+
+    <div id="main">
+        <span th:replace="fragments/header :: header"></span>
+        <div class="main-content container-fluid" layout:fragment="content">
+            <!-- your content here -->
+            <!-- For large tables, wrap them in a div with these classes -->
+            <div class="table-responsive">
+                <!-- Your table goes here -->
+            </div>
+        </div>
+    </div>
+
+    <div id="footer">
+        <span th:replace="fragments/footer :: footer"></span>
+    </div>
+</div>
+
+<script th:inline="javascript">
+
+    console.log(materiels);
+    var materiels = [[${materiels}]]
+    window.TypeMaterielOptions = /*[[${TypeMaterielOptions}]]*/ [];
+    window.materielParType = /*[[${materielParType}]]*/ {};
+
+
+    window.demandesByDate = /*[[${demandesByDate}]]*/ {};
+
+    window.percentageOfFreeMaterials = /*[[${percentageOfFreeMaterials}]]*/ 0;
+
+
+    window.totalUtilisateurs = /*[[${totalUtilisateurs}]]*/ 0;
+    window.nombreAdministrateurs = /*[[${nombreAdministrateurs}]]*/ 0;
+    window.nombreUtilisateurs = /*[[${nombreUtilisateurs}]]*/ 0;
+
+    console.log("Demandes :", window.demandesByDate);
+    console.log("Type de Demandes:", window.demandesByDate);
+
+    console.log("Nombre d'Administrateurs :", window.nombreAdministrateurs);
+    console.log("Type de nombreAdministrateurs:", typeof window.nombreAdministrateurs);
+
+    console.log("Nombre d'Utilisateurs :", window.nombreUtilisateurs);
+    console.log("Type de nombreUtilisateurs:", typeof window.nombreUtilisateurs);
+
+</script>
+<script th:src="@{/js/feather.min.js}"></script>
+<script th:src="@{/js/perfect-scrollbar.min.js}"></script>
+<script th:src="@{/js/app.js}"></script>
+<script th:src="@{/js/Chart.min.js}"></script>
+<script th:src="@{/js/apexcharts.min.js}"></script>
+<script th:src="@{/js/dashboard.js}"></script>
+<script th:src="@{/js/main.js}"></script>
+
+
+<script th:src="@{/js/dayjs.min.js}"></script>
+<script th:src="@{/js/apexcharts.min.js}"></script>
+<script th:src="@{/js/ui-apexchart.js}"></script>
+
+
+
+
+
+<th:block layout:fragment="scripts"></th:block>
+</body>
+</html>

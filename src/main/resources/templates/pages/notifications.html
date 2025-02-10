@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/template}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications</title>
+    <style>
+        .notifications-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .notification-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .notification-item {
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            padding: 15px;
+            transition: background-color 0.3s ease;
+        }
+        .notification-item:hover {
+            background-color: #f0f0f0;
+        }
+        .notification-message {
+            margin: 0 0 10px 0;
+            font-size: 16px;
+        }
+        .notification-date {
+            color: #888;
+            font-size: 12px;
+        }
+        .mark-read-btn {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 12px;
+            margin-top: 10px;
+            cursor: pointer;
+            border-radius: 3px;
+            transition: background-color 0.3s ease;
+        }
+        .mark-read-btn:hover {
+            background-color: #45a049;
+        }
+        .unread {
+            font-weight: bold;
+            border-left: 4px solid #4CAF50;
+        }
+        .read {
+            color: #888;
+            border-left: 4px solid #888;
+        }
+        .no-notifications {
+            text-align: center;
+            color: #888;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+<div class="main-content container-fluid" layout:fragment="content">
+    <div class="notifications-container">
+        <h1>Notifications</h1>
+        <div th:if="${#lists.isEmpty(userNotifications)}" class="no-notifications">
+            <p>Vous n'avez pas de notifications.</p>
+        </div>
+        <ul th:if="${not #lists.isEmpty(userNotifications)}" class="notification-list">
+            <li th:each="notification : ${userNotifications}"
+                th:class="${notification.read ? 'notification-item read' : 'notification-item unread'}">
+                <p class="notification-message" th:text="${notification.message}"></p>
+                <small class="notification-date" th:text="${#temporals.format(notification.date, 'dd-MM-yyyy HH:mm')}"></small>
+                <form th:if="${!notification.read}" th:action="@{/markAsRead}" method="post" style="display: inline;">
+                    <input type="hidden" name="id" th:value="${notification.id}" />
+                    <button type="submit" class="mark-read-btn">Marquer comme lu</button>
+                </form>
+            </li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/template}">
+<head>
+    <meta charset="UTF-8">
+    <title>Upload Page</title>
+</head>
+<body>
+<div class="main-content container-fluid" layout:fragment="content">
+    <h1>Upload Page</h1>
+    <form method="post" enctype="multipart/form-data" th:action="@{/uploadFile}">
+        <input type="file" name="file" />
+        <button type="submit">Upload</button>
+    </form>
+
+    <div th:if="${data}">
+        <h2>Uploaded Data</h2>
+        <form method="post" th:action="@{/saveExcelData}">
+            <input type="hidden" name="data" th:value="${#strings.arrayJoin(data, ',')}" />
+            <table border="1">
+                <thead>
+                <tr>
+                    <th th:each="header : ${data[0]}" th:text="${header}">Header</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="row, rowStat : ${data}" th:if="${rowStat.index > 0}">
+                    <td th:each="cell, cellStat : ${row}">
+                        <input type="text" th:name="data[__${rowStat.index}__][__${cellStat.index}__]" th:value="${cell}" />
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <button type="submit">Save Data</button>
+        </form>
+    </div>
+
+    <div th:if="${message}">
+        <p th:text="${message}"></p>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/template}"
+>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des Entites</title>
+</head>
+<body>
+<div class="main-content container-fluid" layout:fragment="content">
+    <header class="text-center mt-3">
+        <h1>Liste des Entites</h1>
+    </header>
+    <main>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div th:if="${error}" class="alert alert-danger">
+                        <p th:text="${error}"></p>
+                    </div>
+
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nom</th>
+                            <th>Type</th>
+                            <th>Entité Père</th>
+                            <th th:if="${#authorization.expression('hasAnyRole(''ADMIN'',''ADMINISTRATEUR'' )')}" >Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="entite : ${entites}">
+                            <td th:text="${entite.id}">1</td>
+                            <td th:text="${entite.nom}">Direction</td>
+                            <td th:text="${entite.type}">DIRECTION</td>
+                            <td th:text="${entite.entitePere != null ? entite.entitePere.nom : 'N/A'}">N/A</td>
+                            <td th:if="${#authorization.expression('hasAnyRole(''ADMIN'',''ADMINISTRATEUR'' )')}" >
+                                <a th:href="@{/deleteEntite(id=${entite.id})}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this entite?');">Delete</a>
+                                <!-- Button trigger modal -->
+                                <button type="button" class="btn btn-secondary btn-sm"
+                                        data-bs-toggle="modal" th:attr="data-bs-target=${'#exampleModal' + entite.id}">
+                                    <i class="fas fa-address-card"></i> Edit
+                                </button>
+
+                                <!-- Modal -->
+                                <div class="modal fade" th:id="${'exampleModal' + entite.id}" tabindex="-1"
+                                     aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel"
+                                                    th:text="${entite.nom}">Modal title</h5>
+                                                <button type="button" class="btn-close"
+                                                        data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form th:action="@{/updateEntite}" method="post">
+                                                    <input type="hidden" th:value="${entite.id}" name="id">
+                                                    <div class="form-group">
+                                                        <label for="nom">Nom</label>
+                                                        <input type="text" class="form-control" id="nom" th:value="${entite.nom}" name="nom">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="type">Type</label>
+                                                        <select class="form-control" id="type" name="type">
+                                                            <option th:each="type : ${typeEntiteOptions}"
+                                                                    th:value="${type}"
+                                                                    th:text="${type}"></option>
+                                                        </select>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label for="entitePere">Entité Père</label>
+                                                        <p  id="entitePere" th:text="${entite.entitePere != null ? entite.entitePere.nom : 'N/A'}"></p>
+                                                    </div>
+                                                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                                                </form>
+                                            </div>
+                                            <div class="modal-footer"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="text-center">
+                        <a th:if="${#authorization.expression('hasAnyRole(''ADMIN'',''ADMINISTRATEUR'' )')}"  th:href="@{/CreateEntite}" class="btn btn-primary">Créer une nouvelle Entite</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+</body>
+</html>

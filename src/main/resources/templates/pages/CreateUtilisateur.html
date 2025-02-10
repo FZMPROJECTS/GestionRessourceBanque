@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/template}"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Create Utilisateur</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+<div class="main-content container-fluid" layout:fragment="content">
+    <header class="text-center mt-3">
+        <h1>Utilisateur Creation</h1>
+    </header>
+    <main>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="form-container">
+                        <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+                            <p th:text="${errorMessage}"></p>
+                        </div>
+                        <form th:action="@{/saveUtilisateur}" th:object="${utilisateur}" method="post">
+                            <div class="mb-3">
+                                <label for="firstname" class="form-label">Prénom:</label>
+                                <input type="text" class="form-control" id="firstname" th:field="*{firstname}">
+                                <div th:if="${#fields.hasErrors('firstname')}" class="text-danger" th:errors="*{firstname}">Prénom Error</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="lastname" class="form-label">Nom:</label>
+                                <input type="text" class="form-control" id="lastname" th:field="*{lastname}">
+                                <div th:if="${#fields.hasErrors('lastname')}" class="text-danger" th:errors="*{lastname}">Nom Error</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Nom d'utilisateur:</label>
+                                <input type="text" class="form-control" id="username" th:field="*{username}">
+                                <div th:if="${#fields.hasErrors('username')}" class="text-danger" th:errors="*{username}">Nom d'utilisateur Error</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Mot de passe:</label>
+                                <input type="password" class="form-control" id="password" th:field="*{password}">
+                                <div th:if="${#fields.hasErrors('password')}" class="text-danger" th:errors="*{password}">Mot de passe Error</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email:</label>
+                                <input type="email" class="form-control" id="email" th:field="*{email}">
+                                <div th:if="${#fields.hasErrors('email')}" class="text-danger" th:errors="*{email}">Email Error</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="address" class="form-label">Adresse:</label>
+                                <input type="text" class="form-control" id="address" th:field="*{address}">
+                                <div th:if="${#fields.hasErrors('address')}" class="text-danger" th:errors="*{address}">Adresse Error</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="telephone" class="form-label">Téléphone:</label>
+                                <input type="text" class="form-control" id="telephone" th:field="*{telephone}">
+                                <div th:if="${#fields.hasErrors('telephone')}" class="text-danger" th:errors="*{telephone}">Téléphone Error</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="entite" class="form-label">Entité:</label>
+                                <select id="entite" class="form-control" th:field="*{entite}">
+                                    <option th:each="entite : ${entites}" th:value="${entite.id}" th:text="${entite.nom}"></option>
+                                </select>
+                                <div th:if="${#fields.hasErrors('entite')}" class="text-danger" th:errors="*{entite}">Entité Error</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="roles" class="form-label">Rôles:</label>
+                                <select class="form-control" id="roles" th:field="*{roles}" multiple="multiple">
+                                    <option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.nom}"></option>
+                                </select>
+                                <div th:if="${#fields.hasErrors('roles')}" class="text-danger" th:errors="*{roles}">Rôles Error</div>
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-success btn-long">Enregistrer</button>
+                                <a th:href="@{/UtilisateursList}" class="btn btn-primary btn-long">Voir la liste</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

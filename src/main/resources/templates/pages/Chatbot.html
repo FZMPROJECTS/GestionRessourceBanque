@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/template}">
+<head>
+    <meta charset="UTF-8">
+    <title>Chatbox</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 20px;
+        }
+        .chat-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .chat-box {
+            height: 400px;
+            overflow-y: scroll;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        .message {
+            margin-bottom: 10px;
+        }
+        .message.user {
+            text-align: right;
+        }
+        .message.bot {
+            text-align: left;
+        }
+        input[type="text"] {
+            width: calc(100% - 80px);
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px;
+            border: none;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="main-content container-fluid" layout:fragment="content" style="background-image: url('https://img.freepik.com/free-vector/realistic-blue-circuit-board-backgrond_52683-13903.jpg'); background-size: cover; background-repeat: no-repeat; background-position: center;">
+    <div class="chat-container">
+        <h2>Chatbox</h2>
+        <div class="chat-box" id="chat-box"></div>
+        <input type="text" id="message-input" placeholder="Type your message here" onkeydown="checkEnter(event)">
+        <button id="send-button" onclick="sendMessage()">Send</button>
+    </div>
+
+    <script>
+        async function sendMessage() {
+            const messageInput = document.getElementById('message-input');
+            const chatBox = document.getElementById('chat-box');
+            const userMessage = messageInput.value;
+
+            if (userMessage.trim() === '') {
+                return;
+            }
+
+            // Afficher le message de l'utilisateur
+            const userMessageElement = document.createElement('div');
+            userMessageElement.classList.add('message', 'user');
+            userMessageElement.textContent = userMessage;
+            chatBox.appendChild(userMessageElement);
+
+            // Envoyer le message à l'API
+            const response = await fetch('/api/chatbot/message', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ message: userMessage })
+            });
+
+            const responseData = await response.json();
+            const botMessage = responseData.response;
+
+            // Afficher la réponse du chatbot
+            const botMessageElement = document.createElement('div');
+            botMessageElement.classList.add('message', 'bot');
+            botMessageElement.textContent = botMessage;
+            chatBox.appendChild(botMessageElement);
+
+            // Effacer l'entrée de message
+            messageInput.value = '';
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function checkEnter(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+    </script>
+</div>
+</body>
+</html>

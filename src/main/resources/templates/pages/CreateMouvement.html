@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/template}">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Assign Material</title>
+
+</head>
+<body>
+<div class="main-content container-fluid" layout:fragment="content">
+    <header class="text-center mt-3">
+        <h1>Assign Material to User</h1>
+    </header>
+    <main>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="form-container">
+                        <form th:action="@{/saveMouvement}" th:object="${mouvement}" method="post">
+                            <div class="mb-3">
+                                <label for="utilisateur" class="form-label">User:</label>
+                                <select class="form-select" id="utilisateur" name="utilisateurId">
+                                    <option th:each="utilisateur : ${utilisateurs}"
+                                            th:value="${utilisateur.id}"
+                                            th:text="${utilisateur.username}">Option</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="material" class="form-label">Material:</label>
+                                <select id="material" class="form-select" name="materielId" >
+                                    <option th:each="material : ${materials}"
+                                            th:value="${material.id}"
+                                            th:text="${material.type}+' : '+${material.num_serie}">Select Material</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="commentaire" class="form-label">Comment:</label>
+                                <textarea id="commentaire" class="form-control" th:field="*{comment}" rows="3"></textarea>
+                            </div>
+
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-success">Assign</button>
+                                <a th:href="@{/MouvementsList}" class="btn btn-secondary">Voir la liste</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

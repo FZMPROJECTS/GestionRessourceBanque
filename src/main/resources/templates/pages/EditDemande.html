@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/template}">
+<head>
+    <meta charset="UTF-8">
+    <title>Demandes List</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script>
+        function showEditForm(demandeId) {
+            document.getElementById('edit-form-' + demandeId).style.display = 'block';
+            document.getElementById('edit-button-' + demandeId).style.display = 'none';
+        }
+
+        function hideEditForm(demandeId) {
+            document.getElementById('edit-form-' + demandeId).style.display = 'none';
+            document.getElementById('edit-button-' + demandeId).style.display = 'block';
+        }
+    </script>
+</head>
+<body>
+<div class="main-content container-fluid" layout:fragment="content">
+    <header class="text-center mt-3">
+        <h1>Modifier Statuts des Demandes</h1>
+    </header>
+    <main>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-10 mb-3">
+                    <a th:href="@{/CreateDemande}" class="btn btn-primary btn-long">Créer une Nouvelle Demande</a>
+                </div>
+                <div class="col-md-10">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Statut</th>
+                                <th>Employé</th>
+                                <th>Matériel</th>
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="demande : ${demandes}">
+                                <td th:text="${demande.id}">1</td>
+                                <td th:text="${demande.statut}"></td>
+                                <td th:text="${demande.employe != null ? demande.employe.nom : 'Non assigné'}"></td>
+                                <td th:text="${demande.materiel != null ? demande.materiel.nom : 'Non assigné'}"></td>
+                                <td>
+                                    <button id="edit-button-[[${demande.id}]]" class="btn btn-primary btn-sm" onclick="showEditForm([[${demande.id}]])">Modifier</button>
+                                    <div id="edit-form-[[${demande.id}]]" style="display: none;">
+                                        <form th:action="@{/updateDemande}" th:object="${demande}" method="post">
+                                            <input type="hidden" th:field="*{id}" />
+                                            <select class="form-select" th:field="*{statut}">
+                                                <option th:each="statutOption : ${statutDemandeOptions}" th:value="${statutOption}" th:text="${statutOption}" th:selected="${demande.statut == statutOption}">Option</option>
+                                            </select>
+                                            <button type="submit" class="btn btn-success btn-sm">Enregistrer</button>
+                                            <button type="button" class="btn btn-secondary btn-sm" onclick="hideEditForm([[${demande.id}]])">Annuler</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/template}">
+<head>
+    <title>Liste des Mouvements</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+<div class="main-content container-fluid" layout:fragment="content">
+
+    <h1>Liste des Mouvements</h1>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Material</th>
+            <th>Department</th>
+            <th>Comment</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="mouvement : ${mouvements}">
+            <td th:text="${mouvement.id}">1</td>
+            <td th:if="${mouvement.materiel != null}" th:text="${mouvement.materiel.type}+' : '+${mouvement.materiel.num_serie}">Material</td>
+            <td th:if="${mouvement.materiel == null}">No Material Assigned</td>
+            <td th:if="${mouvement.materiel != null}" th:text="${mouvement.materiel.site_B_concerne}">Department</td>
+            <td th:text="${mouvement.comment}">Comment</td>
+
+            <td>
+                <a th:href="@{/deleteMouvement(id=${mouvement.id})}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this mouvement?');">Delete</a>
+                <!--
+
+                <button type="button" class="btn btn-secondary btn-sm"
+                        data-bs-toggle="modal" th:attr="data-bs-target=${'#userModal' + utilisateur.id}">
+                  <i class="fas fa-address-card"></i> View
+                </button>
+
+                <div class="modal fade" th:id="${'userModal' + utilisateur.id}" tabindex="-1"
+                     aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel"
+                            th:text="${utilisateur.firstname + ' ' + utilisateur.lastname}">Modal title</h5>
+                        <button type="button" class="btn-close"
+                                data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        <div class="form-group">
+                          <label for="firstname">Prénom</label>
+                          <p class="form-control-plaintext" id="firstname" th:text="${utilisateur.firstname}"></p>
+                        </div>
+                        <div class="form-group">
+                          <label for="lastname">Nom</label>
+                          <p class="form-control-plaintext" id="lastname" th:text="${utilisateur.lastname}"></p>
+                        </div>
+                        <div class="form-group">
+                          <label for="username">Nom d'utilisateur</label>
+                          <p class="form-control-plaintext" id="username" th:text="${utilisateur.username}"></p>
+                        </div>
+                        <div class="form-group">
+                          <label for="email">Email</label>
+                          <p class="form-control-plaintext" id="email" th:text="${utilisateur.email}"></p>
+                        </div>
+                        <div class="form-group">
+                          <label for="address">Adresse</label>
+                          <p class="form-control-plaintext" id="address" th:text="${utilisateur.address}"></p>
+                        </div>
+                        <div class="form-group">
+                          <label for="telephone">Téléphone</label>
+                          <p class="form-control-plaintext" id="telephone" th:text="${utilisateur.telephone}"></p>
+                        </div>
+                        <div class="form-group">
+                          <label for="entite">Entité</label>
+                          <p class="form-control-plaintext" id="entite" th:text="${utilisateur.entite != null ? utilisateur.entite.nom : 'Non assigné'}"></p>
+                        </div>
+
+
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                  -->
+            </td>
+        </tr>
+        </tbody>
+
+    </table>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</div>
+</body>
+</html>

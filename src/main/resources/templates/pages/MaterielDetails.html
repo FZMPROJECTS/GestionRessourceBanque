@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/template}">
+<head>
+    <title>Détails du Matériel</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Barcode+39&display=swap" rel="stylesheet">
+    <style>
+        .card-custom {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .card-custom img {
+            display: block;
+            margin: 0 auto 10px auto;
+        }
+        .card-custom h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .card-custom p {
+            margin-bottom: 10px;
+        }
+        .barcode-container {
+            text-align: center;
+            margin-bottom: 10px; /* Ajustement de la marge du conteneur */
+        }
+
+        .barcode {
+            font-family: 'Libre Barcode 39', cursive;
+            font-size: 36px;
+            letter-spacing: 2px;
+            text-align: center;
+            margin-bottom: 2px; /* Réduis la marge inférieure */
+        }
+
+        .serial-number {
+            text-align: center;
+            font-size: 18px; /* Ajuste la taille de la police si nécessaire */
+            margin-top: -20px; /* Réduis la marge supérieure pour rapprocher */
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between; /* Maintient l'espacement entre les boutons */
+        }
+
+        .form-control[readonly] {
+            background-color: #f8f9fa;
+        }
+
+        .file-upload {
+            display: none; /* Masquer le champ de fichier par défaut */
+        }
+    </style>
+    <script>
+        function handleImageError(image) {
+            image.onerror = null;
+            image.src = 'https://cdn-icons-png.flaticon.com/512/752/752797.png';
+        }
+
+        function enableEditing() {
+            const fields = document.querySelectorAll('.editable');
+            fields.forEach(field => {
+                field.removeAttribute('readonly');
+                field.classList.add('form-control');
+            });
+
+            document.getElementById('edit-button').style.display = 'none';
+            document.getElementById('save-button').style.display = 'inline-block';
+            document.querySelector('.file-upload').style.display = 'block'; // Afficher le champ de fichier
+        }
+
+        function disableEditing() {
+            const fields = document.querySelectorAll('.editable');
+            fields.forEach(field => {
+                field.setAttribute('readonly', 'readonly');
+                field.classList.remove('form-control');
+            });
+
+            document.getElementById('edit-button').style.display = 'inline-block';
+            document.getElementById('save-button').style.display = 'none';
+            document.querySelector('.file-upload').style.display = 'none'; // Masquer le champ de fichier
+        }
+    </script>
+</head>
+<body>
+<div class="main-content container-fluid" layout:fragment="content">
+    <div class="card card-custom">
+        <h1>Détails du Matériel</h1>
+        <form th:action="@{/updateMateriel}" th:object="${materiel}" method="post" enctype="multipart/form-data">
+            <div>
+                <label>ID:</label>
+                <input type="text" th:field="*{id}" readonly="readonly" class="form-control"/>
+            </div>
+            <div>
+                <label>Type:</label>
+                <input type="text" th:field="*{type}" readonly="readonly" class="form-control"/>
+            </div>
+            <div hidden="hidden">
+                <label>Numéro de série:</label>
+                <input type="text" th:field="*{num_serie}" readonly="readonly" class="form-control"/>
+            </div>
+            <div>
+                <label>Code-barres et Numéro de série:</label>
+
+                <div class="card-text barcode-container">
+                    <p class="barcode" th:text="${materiel.num_serie}">Numéro de série</p>
+                    <p class="serial-number" th:text="${materiel.num_serie}" >Numéro de série</p>
+                </div>
+            </div>
+
+            <div>
+                <label>Statut:</label>
+                <select th:field="*{statut}" class="form-control editable">
+                    <option th:each="statut : ${StatutMaterielOptions}" th:value="${statut}" th:text="${statut}"></option>
+                </select>
+            </div>
+
+            <div>
+                <label>État:</label>
+                <select th:field="*{etat}" class="form-control editable">
+                    <option th:each="etat : ${EtatMaterielOptions}" th:value="${etat}" th:text="${etat}"></option>
+                </select>
+            </div>
+            <div>
+                <label>Site A Concerné:</label>
+                <input type="text" th:field="*{site_A_concerne}" readonly="readonly" class="editable"/>
+            </div>
+            <div>
+                <label>Site B Concerné:</label>
+                <input type="text" th:field="*{site_B_concerne}" readonly="readonly" class="editable"/>
+            </div>
+            <div>
+                <label>Date Événement A:</label>
+                <input type="date" th:field="*{date_evenement_A}" readonly="readonly" class="editable"/>
+            </div>
+            <div>
+                <label>Date Événement B:</label>
+                <input type="date" th:field="*{date_evenement_B}" readonly="readonly" class="editable"/>
+            </div>
+
+            <div>
+                <label>Image:</label>
+                <img th:src="@{/image/{id}(id=${materiel.id})}" alt="Image" width="200" height="200" onerror="handleImageError(this)"/>
+                <input type="file" name="image" class="form-control-file file-upload"/> <!-- Ajouter la classe pour masquer -->
+                <input type="hidden" name="existingImageName" th:value="${materiel.imageName}" />
+            </div>
+
+            <br>
+            <div class="button-container">
+                <div>
+                    <button th:if="${#authorization.expression('hasAnyRole(''ADMIN'',''ADMINISTRATEUR'' )')}" type="button" id="edit-button" class="btn btn-primary" onclick="enableEditing()">Modifier</button>
+                    <button th:if="${#authorization.expression('hasAnyRole(''ADMIN'',''ADMINISTRATEUR'' )')}" type="submit" id="save-button" class="btn btn-success" style="display:none;">Enregistrer</button>
+                </div>
+                <button th:if="${#authorization.expression('hasAnyRole(''ADMIN'',''ADMINISTRATEUR'' )')}"  class="btn btn-danger btn-sm">
+                    <a th:href="@{/deleteMateriel(id=${materiel.id})}" style="color: white;">Supprimer</a>
+                </button>
+            </div>
+            <div th:if="${#fields.hasErrors('type')}" class="alert alert-danger">
+                <p th:each="err : ${#fields.errors('type')}" th:text="${err}"></p>
+            </div>
+
+        </form>
+    </div>
+</div>
+</body>
+</html>

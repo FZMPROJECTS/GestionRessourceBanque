@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/template}">
+
+<!--removed the www for Cannot resolve 'statut' error ????-->
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+</head>
+<body>
+<div class="main-content container-fluid" layout:fragment="content">
+    <div class="page-title">
+        <h3>Dashboard</h3>
+        <p class="text-subtitle text-muted">A good dashboard to display your statistics</p>
+    </div>
+    <section class="section">
+        <div class="row mb-2">
+            <div class="col-12 col-md-12">
+                <div class="card card-statistic">
+                    <div class="card-body p-0">
+                        <div class="d-flex flex-column">
+                            <div class='px-3 py-3 d-flex justify-content-between'>
+                                <h3 class='card-title'>DEMANDE</h3>
+                                <div class="card-right d-flex align-items-center">
+                                    <p><span th:text="${demandesThisMonth}"> </span> </p>
+                                </div>
+                            </div>
+                            <div class="chart-wrapper">
+                                <canvas id="canvas1" style="height:100px !important"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-3" hidden="hidden">
+                <div class="card card-statistic">
+                    <div class="card-body p-0">
+                        <div class="d-flex flex-column">
+                            <div class='px-3 py-3 d-flex justify-content-between'>
+                                <h3 class='card-title'>Revenue</h3>
+                                <div class="card-right d-flex align-items-center">
+                                    <p>$532,2 </p>
+                                </div>
+                            </div>
+                            <div class="chart-wrapper">
+                                <canvas id="canvas2" style="height:100px !important"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-3" hidden="hidden">
+                <div class="card card-statistic">
+                    <div class="card-body p-0">
+                        <div class="d-flex flex-column">
+                            <div class='px-3 py-3 d-flex justify-content-between'>
+                                <h3 class='card-title'>ORDERS</h3>
+                                <div class="card-right d-flex align-items-center">
+                                    <p>1,544 </p>
+                                </div>
+                            </div>
+                            <div class="chart-wrapper">
+                                <canvas id="canvas3" style="height:100px !important"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-3" hidden="hidden">
+                <div class="card card-statistic">
+                    <div class="card-body p-0">
+                        <div class="d-flex flex-column">
+                            <div class='px-3 py-3 d-flex justify-content-between'>
+                                <h3 class='card-title'>Sales Today</h3>
+                                <div class="card-right d-flex align-items-center">
+                                    <p>423 </p>
+                                </div>
+                            </div>
+                            <div class="chart-wrapper">
+                                <canvas id="canvas4" style="height:100px !important"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class='card-heading p-1 pl-3'>MATERIELS</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4 col-12">
+                                <div class="pl-3">
+                                    <h3 class='mt-5'>NOMBRES PAR TYPE DE  MATERIELS</h3>
+
+                                </div>
+                            </div>
+                            <div class="col-md-8 col-12">
+                                <canvas id="bar"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h4 class="card-title">Orders Today</h4>
+                        <div class="d-flex">
+                        </div>
+                    </div>
+                    <div class="card-body px-0 pb-0">
+                        <div class="table-responsive">
+                            <table class='table mb-0' id="table1">
+                                <thead>
+                                <tr>
+                                    <th>Utilisateur</th>
+                                    <th>Materiel</th>
+                                    <th>Date</th>
+                                    <th>Statut</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="demande : ${demandesForToday}">
+                                    <td th:text="${demande.utilisateur.username}"></td>
+                                    <td th:text="${demande.materiel.type}+' : '+${demande.materiel.num_serie}"></td>
+                                    <td th:text="${#temporals.format(demande.dateDemande, 'dd-MM-yyyy')}"></td>
+                                    <td>
+                                        <span th:class="${'badge ' +
+                (demande.statut.name() == 'Rejeter' ? 'bg-danger' :
+                (demande.statut.name() == 'Confirmer' ? 'bg-success' :
+                'bg-warning'))}"
+                                              th:text="${demande.statut.name()}">
+
+                                        </span>
+
+
+
+
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card ">
+                    <div class="card-header">
+                        <h4>Types Utilisateurs</h4>
+                    </div>
+                    <div class="card-body">
+                        <div id="radialBars"></div>
+                        <div class="text-center mb-5">
+                        </div>
+                    </div>
+                </div>
+                <div class="card widget-todo">
+                    <div class="card-header">
+                        <h4>Radial Gradient Chart</h4>
+                        <p>Materiels Libres</p>
+                    </div>
+                    <div class="card-body">
+                        <div id="radialGradient"></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+<script>
+    function exportTableToExcel(tableID, filename = '') {
+        var table = document.getElementById(tableID);
+        var wb = XLSX.utils.table_to_book(table, { sheet: "Sheet1" });
+        var wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
+
+        function s2ab(s) {
+            var buf = new ArrayBuffer(s.length);
+            var view = new Uint8Array(buf);
+            for (var i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xFF;
+            return buf;
+        }
+
+        saveAs(new Blob([s2ab(wbout)], { type: "application/octet-stream" }), filename + ".xlsx");
+    }
+</script>
+
+
+</body>
+</html>

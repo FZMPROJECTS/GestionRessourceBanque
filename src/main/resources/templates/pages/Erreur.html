@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/template}"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Erreur</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="main-content container-fluid" layout:fragment="content">
+<header class="text-center mt-3">
+    <h1>Erreur de Validation</h1>
+</header>
+<main>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="alert alert-danger">
+                    <ul>
+                        <li th:each="error : ${#fields.allErrors()}" th:text="${error.defaultMessage}">Message d'erreur</li>
+                    </ul>
+                </div>
+                <a th:href="@{/CreateMateriel}" class="btn btn-primary">Retour</a>
+            </div>
+        </div>
+    </div>
+</main>
+</div>
+</body>
+</html>

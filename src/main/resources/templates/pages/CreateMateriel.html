@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/template}">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Materiel</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+<div class="main-content container-fluid" layout:fragment="content">
+    <header class="text-center mt-3">
+        <h1>Materiel Creation</h1>
+    </header>
+    <main>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="form-container">
+                        <!-- Affichage des messages d'erreur globaux -->
+                        <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+                            <p th:text="${errorMessage}"></p>
+                        </div>
+
+                        <form th:action="@{/saveMateriel}" th:object="${materiel}" method="post" enctype="multipart/form-data">
+                            <div class="mb-3">
+                                <label for="TypeMateriel" class="form-label">Type:</label>
+                                <select class="form-select" id="TypeMateriel" th:field="*{type}">
+                                    <option th:each="type : ${TypeMaterielOptions}" th:value="${type}" th:text="${type}">Type</option>
+                                </select>
+                                <div th:if="${#fields.hasErrors('type')}" class="text-danger" th:errors="*{type}">Type Error</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="numSerie" class="form-label">Numéro de Série:</label>
+                                <input type="text" class="form-control" id="numSerie" th:field="*{num_serie}" required>
+                                <div th:if="${#fields.hasErrors('num_serie')}" class="text-danger" th:errors="*{num_serie}">Numéro de série Error</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="image" class="form-label">Image:</label>
+                                <input type="file" class="form-control" id="image" name="image">
+                                <div th:if="${#fields.hasErrors('image')}" class="text-danger" th:errors="*{image}">Image Error</div>
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-success btn-long">Save</button>
+                                <a th:href="@{/MaterielsList}" class="btn btn-primary btn-long">View List</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>
